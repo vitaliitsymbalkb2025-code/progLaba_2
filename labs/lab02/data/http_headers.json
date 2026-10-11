@@ -1,0 +1,27 @@
+[
+  {
+    "url": "https://secure.example.com",
+    "headers": {
+      "Strict-Transport-Security": "max-age=31536000",
+      "Content-Security-Policy": "default-src 'self'",
+      "X-Frame-Options": "DENY",
+      "X-Content-Type-Options": "nosniff"
+    }
+  },
+  {
+    "url": "https://legacy.example.com",
+    "headers": {
+      "Server": "Apache/2.4.41 (Ubuntu)",
+      "X-Content-Type-Options": "nosniff"
+    }
+  },
+  {
+    "url": "https://portal.example.com",
+    "headers": {
+      "Strict-Transport-Security": "max-age=31536000",
+      "Content-Security-Policy": "default-src 'self'",
+      "X-Content-Type-Options": "nosniff",
+      "X-Powered-By": "PHP/7.4.3"
+    }
+  }
+]
