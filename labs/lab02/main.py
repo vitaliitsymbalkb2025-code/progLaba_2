@@ -9,18 +9,7 @@ from .task2 import main as analyze_main
 
 def demo() -> None:
     user = User("student", "student_1@example.com")
-    user.set_password("correct-password")PS C:\Labki\Labs_programatch\LAba_2> git remote -v
-git : The term 'git' is not recognized as the name of a cmdlet, function, script file, or operable
- program. Check the spelling of the name, or if a path was included, verify that the path is corre
-ct and try again.
-At line:1 char:1
-+ git remote -v
-+ ~~~
-    + CategoryInfo          : ObjectNotFound: (git:String) [], CommandNotFoundException
-    + FullyQualifiedErrorId : CommandNotFoundException
- 
-PS C:\Labki\Labs_programatch\LAba_2> 
-
+    user.set_password("correct-password")
     account = UserAccount(user, audit_log=AuditLog())
 
     print("=== User and account demo ===")

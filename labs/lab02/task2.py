@@ -22,10 +22,17 @@ def load_targets(path: Path) -> list[dict[str, Any]]:
     with path.open(encoding="utf-8") as source:
         data = json.load(source)
     if isinstance(data, dict):
-        data = data.get("resources", data.get("targets", []))
+        if "resources" in data:
+            data = data["resources"]
+        elif "targets" in data:
+            data = data["targets"]
+        else:
+            raise TypeError("Input JSON object must contain resources or targets")
     if not isinstance(data, list):
         raise TypeError("Input JSON must contain a list or a resources list")
-    return [item for item in data if isinstance(item, dict)]
+    if not all(isinstance(item, dict) for item in data):
+        raise TypeError("Each input resource must be an object")
+    return data
 
 
 def audit_resource(resource: dict[str, Any], strict: bool = False) -> dict[str, Any]:
@@ -39,7 +46,7 @@ def audit_resource(resource: dict[str, Any], strict: bool = False) -> dict[str, 
     ]
     leaks = []
     for header in ("Server", "X-Powered-By"):
-        value = headers.get(header, headers.get(header.lower(), ""))
+        value = normalized.get(header.lower(), "")
         if value and VERSION_PATTERN.search(str(value)):
             leaks.append(f"{header}: {value}")
     score = max(0, 100 - len(missing) * 20 - len(leaks) * 5)
@@ -102,7 +109,7 @@ def main(argv: list[str] | None = None) -> int:
     )
     try:
         results = audit_file(args.headers_file, args.output_csv, args.strict)
-    except (OSError, ValueError, json.JSONDecodeError) as error:
+    except (OSError, TypeError, ValueError, json.JSONDecodeError) as error:
         LOGGER.error("Analysis failed: %s", error)
         return 1
     print("=== HTTP Security Headers Audit ===")

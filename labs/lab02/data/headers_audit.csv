@@ -1,4 +1,6 @@
 resource,score,status,missing_headers,software_leaks
-https://secure.example.com,100,PASS,None,None
-https://legacy.example.com,35,FAIL,"Strict-Transport-Security, Content-Security-Policy, X-Frame-Options",Server: Apache/2.4.41 (Ubuntu)
-https://portal.example.com,75,FAIL,X-Frame-Options,X-Powered-By: PHP/7.4.3
+https://secure.example.invalid/,100,PASS,None,None
+https://legacy.example.invalid/,30,FAIL,"Strict-Transport-Security, Content-Security-Policy, X-Content-Type-Options",Server: Apache/2.4.49; X-Powered-By: PHP/7.4.3
+https://api.example.invalid/,75,FAIL,X-Frame-Options,Server: nginx/1.18.0
+https://portal.example.invalid/,100,PASS,None,None
+https://minimal.example.invalid/,15,FAIL,"Strict-Transport-Security, Content-Security-Policy, X-Frame-Options, X-Content-Type-Options",Server: Microsoft-IIS/10.0

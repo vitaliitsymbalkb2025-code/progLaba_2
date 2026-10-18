@@ -13,7 +13,8 @@ labs/lab02/
 ├── task1.py                 # User, Admin, Session, AuditLog, UserAccount
 ├── task2.py                 # аналізатор HTTP-заголовків, варіант 9
 └── data/
-    └── http_headers.json    # навчальні вхідні дані
+    └── data_v09/
+        └── headers.json     # навчальні вхідні дані варіанта 9
 ```
 
 ## Запуск
@@ -23,7 +24,7 @@ labs/lab02/
 ```powershell
 py -m labs.lab02.main demo
 py -m labs.lab02.main analyze `
-  --headers-file labs/lab02/data/http_headers.json `
+  --headers-file labs/lab02/data/data_v09/headers.json `
   --output-csv labs/lab02/data/headers_audit.csv `
   --strict
 ```
@@ -31,12 +32,12 @@ py -m labs.lab02.main analyze `
 Прямий запуск аналізатора також доступний:
 
 ```powershell
-py -m labs.lab02.task2 --headers-file labs/lab02/data/http_headers.json --output-csv labs/lab02/data/headers_audit.csv
+py -m labs.lab02.task2 --headers-file labs/lab02/data/data_v09/headers.json --output-csv labs/lab02/data/headers_audit.csv
 ```
 
 ## Параметри analyze
 
-- `--headers-file` - обов'язковий шлях до JSON-файлу.
+- `--headers-file` - обов'язковий шлях до JSON-файлу; для даних архіву використовується `labs/lab02/data/data_v09/headers.json`.
 - `--output-csv` - обов'язковий шлях до CSV-звіту; батьківський каталог створюється автоматично.
 - `--strict` - переводить ресурс у `FAIL`, якщо виявлена будь-яка проблема.
 - `--log-level` - `DEBUG`, `INFO`, `WARNING` або `ERROR`; за замовчуванням `INFO`.
@@ -49,9 +50,11 @@ py -m labs.lab02.task2 --headers-file labs/lab02/data/http_headers.json --output
 
 ## Результат на навчальних даних
 
-- `secure.example.com`: 100/100, `PASS`.
-- `legacy.example.com`: відсутні три security headers і виявлено `Apache/2.4.41`, тому ресурс має високий ризик.
-- `portal.example.com`: відсутній `X-Frame-Options` і виявлено `PHP/7.4.3`; у строгому режимі статус `FAIL`.
+- `secure.example.invalid`: 100/100, `PASS`.
+- `legacy.example.invalid`: відсутні три security headers і виявлено `Apache/2.4.49` та `PHP/7.4.3`, тому ресурс має високий ризик.
+- `api.example.invalid`: відсутній `X-Frame-Options` і виявлено `nginx/1.18.0`; у строгому режимі статус `FAIL`.
+- `portal.example.invalid`: 100/100, `PASS`.
+- `minimal.example.invalid`: відсутні всі чотири security headers і виявлено `Microsoft-IIS/10.0`; ресурс має високий ризик.
 
 ## Перевірка якості
 
