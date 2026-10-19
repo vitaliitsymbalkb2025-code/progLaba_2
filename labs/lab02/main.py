@@ -39,15 +39,19 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Laboratory work 2 utilities")
     subparsers = parser.add_subparsers(dest="command", required=True)
     subparsers.add_parser("demo", help="run the OOP demonstration")
-    analyze_parser = subparsers.add_parser(
-        "analyze", help="audit HTTP security headers"
-    )
-    analyze_parser.add_argument("--headers-file", required=True)
-    analyze_parser.add_argument("--output-csv", required=True)
-    analyze_parser.add_argument("--strict", action="store_true")
-    analyze_parser.add_argument(
-        "--log-level", choices=("DEBUG", "INFO", "WARNING", "ERROR"), default="INFO"
-    )
+    for command, help_text in (
+        ("analyze", "audit HTTP security headers"),
+        ("all", "run both laboratory tasks"),
+    ):
+        command_parser = subparsers.add_parser(command, help=help_text)
+        command_parser.add_argument("--headers-file", required=True)
+        command_parser.add_argument("--output-csv", required=True)
+        command_parser.add_argument("--strict", action="store_true")
+        command_parser.add_argument(
+            "--log-level",
+            choices=("DEBUG", "INFO", "WARNING", "ERROR"),
+            default="INFO",
+        )
     return parser
 
 
@@ -56,6 +60,11 @@ def main(argv: list[str] | None = None) -> int:
     if args.command == "demo":
         demo()
         return 0
+    if args.command == "all":
+        print("=== LABORATORY WORK 2 ===")
+        print("--- Running both tasks ---\n")
+        demo()
+        print("\n" + "=" * 70 + "\n")
     return analyze_main(
         [
             "--headers-file",

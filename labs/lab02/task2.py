@@ -5,6 +5,7 @@ import csv
 import json
 import logging
 import re
+import sys
 from pathlib import Path
 from typing import Any
 
@@ -77,17 +78,6 @@ def audit_file(
         )
         writer.writeheader()
         writer.writerows(results)
-    for result in results:
-        if result["missing_headers"] != "None":
-            LOGGER.warning(
-                "%s is missing: %s", result["resource"], result["missing_headers"]
-            )
-        if result["software_leaks"] != "None":
-            LOGGER.warning(
-                "%s exposes software details: %s",
-                result["resource"],
-                result["software_leaks"],
-            )
     return results
 
 
@@ -131,7 +121,9 @@ def build_parser() -> argparse.ArgumentParser:
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     logging.basicConfig(
-        level=getattr(logging, args.log_level), format="[%(levelname)s] %(message)s"
+        level=getattr(logging, args.log_level),
+        format="[%(levelname)s] %(message)s",
+        stream=sys.stdout,
     )
     try:
         results = audit_file(args.headers_file, args.output_csv, args.strict)

@@ -27,7 +27,13 @@ py -m labs.lab02.main analyze `
   --headers-file labs/lab02/data/data_v09/headers.json `
   --output-csv labs/lab02/data/headers_audit.csv `
   --strict
+py -m labs.lab02.main all `
+  --headers-file labs/lab02/data/data_v09/headers.json `
+  --output-csv labs/lab02/data/headers_audit.csv `
+  --strict
 ```
+
+Команда `all` послідовно запускає Завдання 1 і Завдання 2.
 
 Прямий запуск аналізатора також доступний:
 
