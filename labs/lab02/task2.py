@@ -91,6 +91,32 @@ def audit_file(
     return results
 
 
+def print_report(results: list[dict[str, Any]], output_path: Path) -> None:
+    print("\n=== TASK 2: HTTP Security Headers Audit ===")
+    print("--- Audit results ---")
+    print(f"{'Resource':<32} {'Score':>7}  {'Status':<6}")
+    print("-" * 51)
+    for result in results:
+        resource = result["resource"].removeprefix("https://").removesuffix("/")
+        print(f"{resource:<32} {result['score']:>3}/100  {result['status']:<6}")
+
+    problems = [
+        result
+        for result in results
+        if result["missing_headers"] != "None" or result["software_leaks"] != "None"
+    ]
+    if problems:
+        print("\n=== Detected Problems ===")
+        for result in problems:
+            resource = result["resource"].removeprefix("https://").removesuffix("/")
+            print(f"\n[WARNING] {resource}")
+            if result["missing_headers"] != "None":
+                print(f"  Missing headers: {result['missing_headers']}")
+            if result["software_leaks"] != "None":
+                print(f"  Software leaks: {result['software_leaks']}")
+    print(f"\n[INFO] Audit report saved to:\n       {output_path}")
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Audit HTTP response security headers")
     parser.add_argument("--headers-file", type=Path, required=True)
@@ -112,10 +138,7 @@ def main(argv: list[str] | None = None) -> int:
     except (OSError, TypeError, ValueError, json.JSONDecodeError) as error:
         LOGGER.error("Analysis failed: %s", error)
         return 1
-    print("=== HTTP Security Headers Audit ===")
-    for result in results:
-        print(f"{result['resource']} | {result['score']}/100 | {result['status']}")
-    print(f"[INFO] Audit report saved to {args.output_csv}")
+    print_report(results, args.output_csv)
     return 0
 
 

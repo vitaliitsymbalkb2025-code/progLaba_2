@@ -8,11 +8,12 @@ from .task2 import main as analyze_main
 
 
 def demo() -> None:
+    print("=== TASK 1: OOP User and Account Model ===")
     user = User("student", "student_1@example.com")
     user.set_password("correct-password")
     account = UserAccount(user, audit_log=AuditLog())
 
-    print("=== User and account demo ===")
+    print("\n--- User and account demonstration ---")
     print(
         f"Successful login: {account.login('student', 'correct-password', '192.0.2.10')}"
     )
